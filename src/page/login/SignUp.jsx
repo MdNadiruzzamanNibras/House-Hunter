@@ -1,8 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useUser from "../../Hook/User";
 
 
 const SignUp = () => {
-      const [error, setError] = useState("");
+    const navigate = useNavigate()
+  const [error, setError] = useState("");
+  const [user, setUser] = useUser()
+  console.log(user,"*");
     const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
@@ -21,7 +26,7 @@ const SignUp = () => {
     console.log(userInfo);
     
     const res = await fetch(
-      "http://localhost:5000/signup",
+      "https://house-hunter-backend-t5ic.onrender.com/signup",
       {
         method: "POST",
         headers: {
@@ -34,13 +39,16 @@ const SignUp = () => {
     console.log(data, "data 34");
     if (res.ok) {
         
-       
+       setUser(data.user)
        
         localStorage.setItem('token', data.token);
       } else {
         setError(error)
         
-      }
+         }
+         if (data.user.role === "Owner") {
+             navigate('/owner')
+         }
     
   };
     return (
